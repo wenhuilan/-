@@ -4,14 +4,14 @@
 typedef struct pnode
 {
 	//入栈和出栈都在栈顶进行
-    char data;//数据
+    char data; //数据
     struct pnode* next;//指针
 }pnode;
 
 typedef struct seqstack
 {
-    int size;//记录栈的大小
-    pnode* top;//指向栈顶元素
+    int size; //记录栈的大小
+    pnode* top; //指向栈顶元素
 }phead;
 
 //创建栈,初始化链栈 
