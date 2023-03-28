@@ -371,7 +371,6 @@ int main()
     {
         return 0;
     }
- 
     //下方计算后缀表达式
     int num=calculate(buffer);
     if(num==999)
@@ -379,5 +378,6 @@ int main()
         return 0;
     }
     printf("%d\n",num);
+    system("pause");
 }
  

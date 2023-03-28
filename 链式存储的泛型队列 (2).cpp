@@ -197,6 +197,6 @@ int main()
      PrintQueue(q);
 	DesQueue(&q);
 	printf("¶ÓÁĞÏú»Ù\n");
- getchar();
+ system("pause");
 	return 0;
 }
