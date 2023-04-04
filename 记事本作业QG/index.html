@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todo List</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+
+<body>
+<header class="bg-header">
+  <div class="container">
+    <div class="header-item">
+      <h3>笔记本</h3>
+      <input type="search" id="searchtextbox" class="search-input" placeholder="输入查询笔记本内容">
+    </div>
+  </div>
+</header>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="todo-item">
+      <h1>欢迎使用笔记本</h1>
+      <div class="todo-inner">
+        <div class="row justify-content-center">
+          <div class="todo-input">
+            <input type="text" class="search-input" placeholder="输入笔记内容" id="addtaskinput"/>
+            <input type="hidden" id="saveindex">
+          </div>
+          <button type="button" class="btn btn-success" id="addtaskbtn">
+            添加笔记
+          </button>
+          <button type="button" class="btn btn-success" id="savetaskbtn" style="display: none;">
+            保存笔记
+          </button>
+          <button type="button" id="deleteallbtn" class="btn btn-danger">
+            删除所有笔记
+          </button>
+        </div>
+        <div class="to-do-output">
+          <table class="table" id="addedtasklist">
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/main.js"></script>
+</body>
+
+</html>

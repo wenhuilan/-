@@ -1,0 +1,244 @@
+一、var和let的区别：
+区别：
+1.使用var声明的变量，其作用域为该语句所在的函数内，且存在变量提升现象；
+2.使用let声明的变量，其作用域为该语句所在的代码块内，不存在变量提升；
+3.let不允许在相同作用域内，重复声明同一个变量。
+
+
+二、4种输出方法、语法
+alert(confirm)	弹出
+document.write	写入文档,通常页面中间插入广告
+console.log	console
+innerHTML/innerText	在指定元素中动态添加内容
+
+// 变量命名: 区分大小写
+// 定义变量:
+var name = "maotai";
+console.log(name);
+ 
+// 数据类型:
+// 数字 字符串 布尔 [] {} 正则
+var num = 12;
+var str = "maotai";
+var boo = true;
+var n = null;
+var m = undefined;
+var obj = {name: 'maotai'};
+var arr = [1, 2, 3];
+var reg = /^1\d{11}/;
+var fn = function () {
+ 
+}
+
+绑定事件的三种方法
+1、btn.οnclick=function(){
+      alert(" 我是第一种绑定事件的方法 ");
+}
+2、addEventListener：可以 绑定多种事件，不会覆盖绑定事件
+btn.addEventListener("click",function(){
+      alert(" 我是第二种绑定事件的方法 ");
+},false)
+3、function clickFn(){
+      alert(" 我是第三种绑定事件的方法 ");
+}
+
+
+js最常用的click事件3种方法
+
+1、 onclick=name()
+例如：<button type="button" onclick="displayDate()">点击</button>
+2、js中绑定
+例：btn.onclick=function(){}
+3、 事件柄方法
+//addEventListener 用于向指定元素添加事件句柄
+//可以向一个元素添加多次点击事件，后一个点击事件不会覆盖前一个点击事件
+例：btn.addEventListener('click',function(){ },false)
+
+
+三、
+localStorage.getItem(key):获取指定key本地存储的值
+localStorage.setItem(key,value)：将value存储到key字段。
+
+四、类型转化
+JSON.parse()方法将JSON格式字符串转换为js对象(属性名没有双引号)；
+JSON.stringify()先将对象转换为字符串；
+
+五、
+push() 方法可向数组的末尾添加一个或多个元素，并返回新的长度。
+
+六、js 动态添加 html 代码主要有两种方法：
+1、appendChild( ) 来实现节点以及文本内容的添加；
+2、拼接标签字符串，并用 innerHTML 来添加；
+例子://通过 拼接 字符串 来添加 HTML 内容。 
+var name = '测试样例'; age = 18 ;
+var html = '' ;
+//动态添加一个段落
+html += "<p> <b>我是另外一种方式添加的新段落！！！</b></p>";
+//动态添加一个表格
+html += '<table style="border:2px solid red;"> ';
+html += '<tr> <td> '+ name +' <td> </tr>  ';
+html += '<tr> <td> '+ age +' <td> </tr>  ';
+html += '</table>';		
+demo.innerHTML += html;
+innerHTML属性允许更改html元素的内容,可以设置或返回表格行的开始和结束标签之间的HTML
+innerHtml解析html标签, innnerText不解析html
+
+
+在字符串中想引用变量的值，可以用$符加变量去引用，最后展示会自动替换调的
+
+七、本地存储技术
+localStorage.setItem(key, value) 方法可以在本地存储中设置键值对。它接受两个参数：键（key）和值（value）。键是一个字符串，值可以是任何类型，但会被自动转换为字符串。如果本地存储中已经有了一个与 key 相同的键，它的值会被新的值所替换。
+用 localStorage.getItem(key) 去取这个键值对
+
+八、js循环
+1）JavaScript for…in 循环
+    for…in 循环的语法是：
+for (key in object) {
+    // body of for...in
+}
+在循环的每次迭代中，一个键被分配给 key 变量。对于所有对象属性，循环继续。
+for…in 与数组
+const arr = [ 'hello', 1, 'JavaScript' ];
+for (let x in arr) {
+    console.log(arr[x]);
+}
+2）for of 循环：
+for…of语句在可迭代的对象（包括Array，Map，set，String，TypedArray，arguments对象等等）上创建一个迭代循环，调用自定义迭代钩子，并为每个属性的值执行语句
+
+for…of 与 for…in的区别
+它们之间的主要区别在于它们的迭代方式，
+for…in语句以任意顺序迭代对象的可枚举属性，
+for…of语句遍历可迭代对象定义要迭代的数据。
+
+九、使用Style.display 样式：
+显示对象用 obj.style.display = "block";
+隐藏对象用 obj.style.display = "none"；
+
+问题：在js中我们有时想动态的控制一个div显示或隐藏或更多的操作，但如果我们style.display=""可能导致没有效果。
+解决方法：id为name的样式用style这样内置到标签内，这样不管用display=""还是display="block"就都可以正常显示
+
+十、js中数组的13个方法
+ 
+var arr = [0, 1, 2, 3];
+arr.push(4);
+arr.push(5, 6);
+arr[arr.length] = 7;
+console.log(arr);
+ 
+arr.pop();
+console.log(arr);
+ 
+arr.shift()
+console.log(arr);
+ 
+arr.unshift(0);
+console.log(arr);
+ 
+ 
+arr.splice(2,2); //从索引n开始删除m个
+console.log(arr);
+ 
+arr.splice(2); //从索引n开始删除到结尾
+arr.splice(0); //清空原数组,返回原数组的每一项
+arr.splice(); //数组中一项都没删除, 返回一个空数组
+ 
+arr.splice(1,2,0); //从索引n开始删除m个,删除的部分用x代替
+ 
+arr2 = [6,7,8];
+arr1.concat(arr2); // 把arr2接到arr1后
+ 
+arr2.toString(); // 将数组转换为字符串
+ 
+arr.join('+'); // 数组以+为分割符
+ 
+arr.reverse(); // 倒序排列
+
+十一、索引
+1、字符串索引：
+为数组对象添加属性不会影响到同为该对象属性的length的值，因此该数组的length一直等于零。
+如var array = [];
+     array[ "a" ] = "hello" ;
+console.log( "length: " + array.length); //0
+2、数值索引：
+ 当我们试图为一个js数组添加数值下标或者数字字符串下标的时候，效果一样都会影响数组的length。
+
+十二、js中index()的四种经典用法
+<body>
+   <div id="nav"> <a href="">知道了</a> </div> 
+    <ul id="u"> 
+      <li id="bar">bar</li> 
+    </ul> 
+</body>
+
+$("#u li").click(function(){
+var a = $('li').index(document.getElementById('bar')); //1，传递一个DOM对象，返回这个对象在原先集合中的索引位置 
+var b = $('li').index($('#bar')); //1，传递一个jQuery对象 
+var c = $('li').index($('li:gt(0)')); //1，传递一组jQuery对象，返回这个对象中第一个元素在原先集合中的索引位置 
+var d = $('#bar').index('li'); //1，传递一个选择器，返回#bar在所有li中的索引位置 
+var e = $('#bar').index(); //1，不传递参数，返回这个元素在同辈中的索引位置。 
+alert(e);
+});
+
+ 
+$("#nav a").click(function(){ 
+//四个经典的用法 
+var index1 = $("#nav a").index(this); 
+var index2 = $("#nav a").index($(this)); 
+var index3 = $(this).index() 
+var index4 = $(this).index("a") 
+alert(index4); 
+return false; 
+}); 
+
+
+
+Array.from()：将一个类数组对象或者可遍历对象转换成一个真正的数组。
+要将一个类数组对象转换为一个真正的数组，必须具备以下条件：
+　　1、该类数组对象必须具有length属性，用于指定数组的长度。如果没有length属性，那么转换后的数组是一个空数组。
+
+　　2、该类数组对象的属性名必须为数值型或字符串型的数字
+
+
+css中的display属性值：table，table-row，table-cell
+table：此元素会作为块级表格来显示，表格前后带有换行符。
+table-row：此元素会作为一个表格行显示
+table-cell：此元素会作为一个表格单元格显示
+
+、RegExp(正则表达式)-是用于查找符合某些规则的字符串的工具
+1 、正则表达式的作用： 用于对字符串进行操作
+2 、正则的功能(都是对字符串进行的操作)：匹配  替换  提取
+3、创建方式
+const reg = new RegExp("abc"); 或const reg = /abc/;
+.创建正则表达式
+使用一个正则表达式字面量：
+let reg = /ab+c/;
+let reg = /^[a-zA-z]/gi;
+使用RegExp对象：
+new RegExp(str[, attr])接收2个参数，str是一个字符串，指定正则表达式匹配规则，attr可选，表示匹配模式，值有g(全局匹配),i(区分大小写的匹配)和m(多行匹配)。
+
+ match
+str.match(reg)：
+str:被检索的源字符串。
+reg:可以是需要检索的字符串，也可以是需要检索的RegExp对象，可以添加标志，如i
+
+4、 简单类的使用
+const reg = /abc/
+// 可以匹配含有内部字符abc(连续的)的字符串
+5、匹配方法
+语法结构：   正则对象.test(字符串);
+返回值：    匹配成功返回true，否则返回false
+6、语法
+正则的一些语法
+1） 字符类
+标识方式，在正则内部书写一个[ ]，[ ]整体表示一位字符,这一位字符可以是[]内部的任意一个
+2）反向类
+标识方式，在字符类的[ ]的后面写一个 ^
+作用：标识除内部字符外的其他字符可以匹配成功
+3)匹配起始位置 
+标识方式：在正则最开始书写一个 ^
+作用：标识只有包含内部字符才可以匹配成功
+4)或者操作符
+正则/a|b|c/; 与 /[abc]/; 功能相同
+
+1 如果是多种单个字符的匹配，使用字符类
+2 如果是多种多个字符的匹配，使用或者操作符
