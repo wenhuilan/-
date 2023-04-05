@@ -160,9 +160,7 @@ button {
 table {
   /* 为表格设置合并边框模型： */
   border-collapse: collapse;
-   
   word-break: break-all;
-  width: 100%;
   margin-bottom: 16px;
   color: #212529;
 }
