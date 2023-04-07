@@ -1,0 +1,53 @@
+short 占据的内存大小是2 个byte；
+
+1、srand（）函数：随机数发生器的初始化函数，需要提供一个种子，这个种子会对应一个随机数。
+
+rand()函数用来产生随机数,
+
+使用rand()和srand()产生指定范围内的随机整数的方法
+
+“模除+加法”的方法
+
+因为，对于任意数，0<=rand()%(n-m+1)<=n-m
+
+因此，0+m<=rand()%(n-m+1)+m<=n-m+m
+
+因此，如要产生[m,n]范围内的随机数num，可用：
+
+int num=rand()%(n-m+1)+m;
+
+1)如果使用相同的种子,srand() 函数会出现一样的随机数。默认种子数是1，即srand(1)；
+ 2)rand() 前重新播种， 也就是 srand(time(NULL)) ，使得程序每次编译运行产生的随机数不同;
+
+2、 time() 函数包含在头文件 time.h 中，在调用之前需要引入此头文件： #include <time.h>
+
+ time() 函数一般用来求 1970-01-01 00:00:00 到现在的时间（当参数 seconds 为 0 或 ‘NULL’ 时）。
+
+3、void Sleep(DWORD dwMilliseconds) 函数，每隔一秒输出 time(NULL) ， Sleep 函数包含在 windows.h 头文件中，参数单位是毫秒，参数类型是 DWORD （double word， 大小两字节， 相当于 short 的大小）:
+
+4、洗牌算法
+例题
+void Reservoir_Sampling(vector<int>& arr)
+{
+	int k;
+	for (int i=M;i<arr.size();++i)
+	{
+		srand((unsigned)time(NULL));
+		k=rand()%(i+1);
+		if (k<M)
+			swap(arr[k],arr[i]); 
+	}
+}
+
+5、clock函数-返回值就是你程序当前运行的时间（毫秒为单位），类型是长整型,
+写法：long start,end,result;
+
+start=clock();
+
+需要测试的代码段；
+
+end=clock();
+
+result=end-start;
+
+则result里面保存的就是这段测试代码所运行的时间了（以毫秒为单位）；
