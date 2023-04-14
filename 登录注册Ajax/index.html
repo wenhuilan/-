@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- 消息弹窗,这里i引用了阿里的字体图标 -->
+  <link rel="stylesheet" href="http://at.alicdn.com/t/font_1117508_wxidm5ry7od.css">
+  <link rel="stylesheet" href="css/message.css">
+  <!-- 人头图标样式 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+    <!-- 复选框允许用户在一定数量的选择中选取一个或多个选项： -->
+    <!-- 这里复选框是为了绑定元素触发图片翻转 -->
+    <input type="checkbox" id="flip">
+    <div class="cover">
+      <div class="front">
+        <img src="images/front.jpeg" alt="">
+      </div>
+      <div class="back">
+        <img class="backImg" src="images/back.jpeg" alt="">
+      </div>
+    </div>
+    <div class="forms">
+      <div class="form-content">
+        <div class="login-form">
+          <div class="title">登录</div>
+          <!-- action属性规定当提交表单时，向何处发送表单数据。（是必需的属性） -->
+          <form action="#" id="loginForm">
+            <div class="input-boxes">
+              <div class="input-box">
+                <i class="fas fa-user"></i>
+                <!-- required 属性规定必需在提交表单之前填写输入字段。 -->
+                <input id="username" type="text" placeholder="输入用户名" required>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input id="password" type="password" placeholder="输入密码" required>
+              </div>
+              <div class="text"><a href="#">忘记密码 ?</a></div>
+              <div class="button input-box">
+                <input type="submit" value="登录" id="submit">
+              </div>
+              <!-- for 属性规定 label 绑定的表单元素。 -->
+              <div class="text sign-up-text">还没有账号 ? <label for="flip">立即注册</label></div>
+            </div>
+          </form>
+        </div>
+        <div class="signup-form">
+          <div class="title">注册</div>
+          <form action="#">
+            <div class="input-boxes">
+              <div class="input-box">
+                <i class="fas fa-user"></i>
+                <input type="text" placeholder="输入用户名" required>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                <input type="text" placeholder="输入邮箱" required>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" placeholder="输入密码" required>
+              </div>
+              <div class="button input-box">
+                <input type="submit" value="注册">
+              </div>
+              <div class="text sign-up-text">已经有账号 ? <label for="flip">立即登录</label></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  <div class="round">
+    <div><img src="images/fron.jpeg" class="round-img"></div>
+    <audio src="img/wanxing.mp3" controls loop></audio>
+  </div>
+
+
+
+
+  <script src="js/message.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+
+</html>
