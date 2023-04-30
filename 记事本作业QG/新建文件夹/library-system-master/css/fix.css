@@ -1,0 +1,54 @@
+.fix{
+
+    width: 100%;
+   height: 100vh;
+    background-image: url(../images/fix-back.jpg);
+    background-repeat: no-repeat;
+    overflow: hidden;
+    background-size: cover;
+ } 
+
+ .fix-container{
+    width: 380px;
+    margin: 7% auto;
+    border-radius: 25px;
+    background-color: rgba(0,0,0,0.1);
+    box-shadow: 0 0 17px #333;
+ }
+ .fix-header{
+    text-align: center;
+    padding-top: 20px;
+ }
+ .fix-header h1{
+    color: #333;
+    font-size: 30px;
+    margin-bottom: 30px;
+ }
+
+.fix-main input{
+    width: 300px;
+    height: 60px;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+     margin-top: 10px;
+}
+ .fix-lunbo button {
+    width: 100px;
+    height: 40px;
+   font-size: 15px;
+   color: #333;
+    background-color: #86b7e1; 
+   border-radius: 15px;
+   border: none;
+}
+.fix .fix-form {
+    position: absolute;
+    width: 100%;
+} 
+
+.fix-input{
+    height: 80px;
+    width: 100%;
+  
+}

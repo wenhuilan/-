@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/lunbo.css">
+    <link rel="stylesheet" href="css/message.css">
+    <!-- 人头图标样式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>LibrarySystem</title>
+</head>
+<body>
+<div class="main-wrapper">
+    <div class="header">
+        <a href="#" class="brand"><i class='far fa-laugh-wink icon'></i> LibrarySystem</a>
+        <i class='fas fa-bars toggle-sidebar'></i>
+        <form action="#">
+            <div class="form-group">
+                <input type="text" placeholder="Search...">
+                <i class='fas fa-search icon'></i>
+            </div>
+        </form>
+        <a href="#" class="nav-link">
+            <i class='fas fa-bell icon'></i>
+            <span class="badge">5</span>
+        </a>
+        <a href="#" class="nav-link">
+            <i class='fas fa-comments icon'></i>
+            <span class="badge">8</span>
+        </a>
+        <span class="divider"></span>
+        <div class="profile">
+            <img src="images/main-back.jpg"
+                 alt="">
+            <ul class="profile-link">
+                <li><a href="profile.html"><i class='fas fa-user-circle icon'></i> 个人信息</a></li>
+                <li><a href="fix.html"><i class='fas fa-user-edit icon'></i> 修改密码</a></li>
+                <li><a href="#" onclick="logout()"><i class='fas fa-sign-out-alt icon'></i> 退出</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="sidebar">
+        <ul class="side-menu">
+            <li><a href="lunbo.html" class="active"><i class='fas fa-th-large icon'></i> 首页</a></li>
+            <li class="divider" data-text="主菜单">主菜单</li>
+            <li>
+                <a href="#"><i class='fas fa-user-edit icon'></i> 用户信息管理 <i
+                        class='fas fa-chevron-right icon-right'></i></a>
+                <ul class="side-dropdown">
+                    <li><a href="manage.html">用户信息列表</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class='fas fa-book icon'></i> 书籍管理 <i
+                        class='fas fa-chevron-right icon-right'></i></a>
+                <ul class="side-dropdown">
+                    <li><a href="book.html">书籍列表</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class='fas fa-user-circle icon'></i> 个人中心 <i
+                        class='fas fa-chevron-right icon-right'></i></a>
+                <ul class="side-dropdown">
+                    <li><a href="profile.html">个人信息</a></li>
+                    <li><a href="fix.html">修改密码</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div id="content">
+        <main>
+            <div class="page-header">
+                <div class="page-sub-header">
+                    <h3 class="page-title">欢迎</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="lunbo.html">首页</a></li>
+                        <li class="breadcrumb-item active">首页</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="slide-box">
+                    <div class="banner-box"></div>
+                    <button class="slide-left-btn material-icons">arrow_back_ios</button>
+                    <button class="slide-right-btn material-icons">arrow_forward_ios</button>
+                    <div class="pagination-box"></div>
+                </div>
+            </div>
+
+        </main>
+        <!-- MAIN -->
+    </div>
+
+</div>
+<script src="js/message.js"></script>
+<script src="js/ajax.js"></script>
+<script src="js/common.js"></script>
+<script src="js/lunbo.js"></script>
+</body>
+</html>
