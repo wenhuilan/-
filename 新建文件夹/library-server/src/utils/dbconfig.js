@@ -10,25 +10,13 @@ module.exports = {
     password: 'haohao',
     database: 'library_system'
   },
-  sqlConnect: function (sql, sqlArr, callback) {
-    // 创建连接池
-    var pool = mysql.createPool(this.config);
-     // 从创建的连接池中获取到一个我们需要的连接
-    // 使用回调函数的参数conn来查询数据库
-    pool.getConnection((err, conn) => {
-      if (err) {
-        console.log('---数据库连接失败---')
-        return;
-      }
 
-      conn.query(sql, sqlArr, callback);
-      //释放
-      conn.release();
-    })
-  },
   SySqlConnect: function (sql, sqlArr) {
     return new Promise((resolve, reject) => {
+       // 从创建的连接池
       var pool = mysql.createPool(this.config);
+    // 使用回调函数的参数conn来查询数据库
+
       pool.getConnection((err, conn) => {
         if (err) {
           reject(err)

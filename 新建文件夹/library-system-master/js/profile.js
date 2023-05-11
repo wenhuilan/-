@@ -1,3 +1,4 @@
+// 点击头像上传按钮时，触发input的上传按钮
 document.getElementById("img-upload").onclick = function () {
   document.getElementById("img-file").click();
 }
@@ -19,9 +20,10 @@ document.getElementById("img-file").onchange = function () {
     deleteIcon.className = 'delete';
     deleteIcon.innerText = 'x';
     deleteIcon.dataset.filename = img[i].name;
-    imgBox.appendChild(deleteIcon);
 
+    imgBox.appendChild(deleteIcon);
     imgBox.appendChild(box);
+    
     var body = document.getElementsByClassName("gallery")[0];
     body.appendChild(imgBox);
 

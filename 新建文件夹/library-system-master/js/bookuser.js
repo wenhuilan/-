@@ -7,11 +7,9 @@ document.getElementById("img-upload").onclick = function () {
 document.getElementById("img-file").onchange = function () {
     document.getElementById("gallery").innerHTML = "";
     var img = document.getElementById("img-file").files;
-    console.log('img:'+img);
     for (var i = 0; i < img.length; i++) {
         var file = img[i];
         var url = URL.createObjectURL(file);
-        console.log('url:'+url);
         var box = document.createElement("img");
         box.setAttribute("src", url);
         box.className = 'img';
@@ -247,7 +245,7 @@ function showbooks(pagenum) {
                                 class="far fa-trash-alt me-1"></i>删除</a>
                         <a class="btn btn-sm btn-white text-success me-2" href="#" onclick="openSendModal(${item.id},'${item.createrFeedback}','${item.feedback}')"><i
                                 class="far fa-paper-plane me-1"></i>提交审核</a>
-                        <a class="btn btn-sm btn-white text-success me-2" href="#" onclick="openCommentModal(${item.id},'${item.comment}')">评论详情</a>
+                        <a class="btn btn-sm btn-white text-success me-2" href="#" onclick="openCommentModal(${item.id},'${item.commentBook}')">评论详情</a>
                       </td>
                     </tr>`;
                 }
@@ -334,7 +332,6 @@ function openDeleteModal(bookid) {
     }
 }
 
-
 // 删除弹窗的关闭
 // forEach遍历增加点击事件--因为btnClose不止一个
 btnClose.forEach(item => {
@@ -364,7 +361,7 @@ function hideModal() {
     }
     if (addModal) {
         addModal.style.display = "none";
-    } 
+    }
     if (sendModal) {
         sendModal.style.display = "none";
     }
@@ -388,7 +385,7 @@ function openeditmodal(id) {
     let idData = {
         id: id
     };
-    Ajax.post('http://127.0.0.1:3000/books/findBookId', JSON.stringify(idData) ,function (data) {
+    Ajax.post('http://127.0.0.1:3000/books/findBookId', JSON.stringify(idData), function (data) {
         let result = JSON.parse(data);
         if (result.code == 200) {
             if (result.data != null) {
@@ -467,28 +464,66 @@ function mobile(value) {
 
 function openCommentModal(id, comment) {
     commentModal.style.display = "block";
-    let commentBook = document.getElementById("commentBook");
-        let idData = {
-            id: id,
-        }
-        Ajax.post('http://127.0.0.1:3000/books/findBookId', JSON.stringify(idData), function (data) {
-            // 后台返回的数据就是 字符串类型。要转成json，必须自己手动转换。
-            // JSON.parse() 方法解析一个JSON字符串，构造由字符串描述的JavaScript值或对象
-            let result = JSON.parse(data);
-            if (result.code == 200) {
-               if(result.data!=null){
-                   let bookObj = result.data;
-                   document.getElementById("comment-content").value = bookObj.commentBook;
-               }
-            }
-        });
+    document.getElementById("commentid").value = id;
+    document.getElementById("comment-content").value = comment ? comment : "";
 };
+let commentBook = document.getElementById("commentBook");
+commentBook.addEventListener("submit", function (e) {
+    e.preventDefault();
+    let formData = {
+        id: document.getElementById("commentid").value,
+        comment: document.getElementById("comment-content").value
+    }
+    Ajax.post('http://127.0.0.1:3000/books/commentBook', JSON.stringify(formData), function (data) {
+        // 后台返回的数据就是 字符串类型。要转成json，必须自己手动转换。
+        // JSON.parse() 方法解析一个JSON字符串，构造由字符串描述的JavaScript值或对象
+        let result = JSON.parse(data);
+        if (result.code == 200) {
+            message.show({ type: 'success', text: result.msg })
+        } else {
+            message.show({ type: 'error', text: result.msg })
+        }
+    });
+    hideModal();
+});
+
+
+
+function openSendModal(bookid, createrFeedback, feedback) {
+    sendModal.style.display = "block";
+    document.getElementById("feedbookbackid").value = bookid;
+    document.getElementById("createrFeedback").value = createrFeedback ? createrFeedback : "";
+    document.getElementById("feedback").value = feedback ? feedback : "";
+}
+//提交审核
+let feedbookback = document.getElementById("feedbookback");
+feedbookback.addEventListener("submit", function (e) {
+    e.preventDefault();
+    let feedData = {
+        id: document.getElementById("feedbookbackid").value,
+        createrFeedback: document.getElementById("createrFeedback").value,
+        feedback: document.getElementById("feedback").value,
+        //普通用户没有 审核通过或者不通过按钮的 下面的status是2 2表示待审核状态 书籍状态[1未提交2待审核3已通过4被退回]
+        status: 2
+    };
+    console.log(JSON.stringify(feedData))
+    Ajax.post('http://127.0.0.1:3000/books/feedbackBook', JSON.stringify(feedData), function (data) {
+        // 后台返回的数据就是 字符串类型。要转成json，必须自己手动转换。
+        // JSON.parse() 方法解析一个JSON字符串，构造由字符串描述的JavaScript值或对象
+        let result = JSON.parse(data);
+        if (result.code == 200) {
+            message.show({ type: 'success', text: result.msg })
+        } else {
+            message.show({ type: 'error', text: result.msg })
+        }
+    });
+    hideModal();
+});
 
 
 
 function exportall() {
     var bookcheck = document.querySelectorAll(".book-check");
-    // 情况1，导出勾选框的书籍
     let ids = '';
     bookcheck.forEach(item => {
         if (item.checked) {
@@ -499,7 +534,6 @@ function exportall() {
         // substring(0, 2)这个只含开头不含结尾，因此截取是截取两个字符，从第一个到第二个字符，不包含第三个。
         ids = ids.substring(0, ids.lastIndexOf(","));
     }
-    console.log('ids:' + ids);
     let searchData = {
         // 获取用户输入的用户名和密码
         bookname: document.getElementById("bookname").value,
@@ -513,38 +547,4 @@ function exportall() {
     window.open(url + "?ids=" + ids + "&bookname=" + searchData.bookname
         + "&bookauthor=" + searchData.bookauthor + "&bookisbn=" + searchData.bookisbn + "&booktype=" + searchData.booktype + "&bookstatus="
         + searchData.bookstatus, '_blank');
-    var url = 'http://127.0.0.1:3000/books/exportBookAll';
-    window.open(url + "?ids=" + ids, '_blank');
 }
-
-
-function openSendModal(bookid, createrFeedback, feedback) {
-    sendModal.style.display = "block";
-    document.getElementById("feedbookbackid").value = bookid;
-    document.getElementById("createrFeedback").value = createrFeedback ? createrFeedback : "";
-    document.getElementById("feedback").value = feedback ? feedback : "";
-    document.getElementById("feedbackstatus").selectedIndex[0] = true;
-}
-
-//提交审核
-let feedbookback = document.getElementById("feedbookback");
-feedbookback.addEventListener("submit", function (e) {
-    e.preventDefault();
-    let feedData = {
-        id: document.getElementById("feedbookbackid").value,
-        createrFeedback: document.getElementById("createrFeedback").value,
-        feedback: document.getElementById("feedback").value,
-        status: document.getElementById("feedbackstatus").options[document.getElementById("feedbackstatus").selectedIndex].value
-    };
-    Ajax.post('http://127.0.0.1:3000/books/feedbackBook', JSON.stringify(feedData), function (data) {
-        // 后台返回的数据就是 字符串类型。要转成json，必须自己手动转换。
-        // JSON.parse() 方法解析一个JSON字符串，构造由字符串描述的JavaScript值或对象
-        let result = JSON.parse(data);
-        if (result.code == 200) {
-            message.show({ type: 'success', text: result.msg })
-        } else {
-            message.show({ type: 'error', text: result.msg })
-        }
-    });
-    hideModal();
-});

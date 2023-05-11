@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/message.css">
+    <!-- 人头图标样式 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>LibrarySystem</title>
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <div class="header">
+            <a href="#" class="brand"><i class='far fa-laugh-wink icon'></i> LibrarySystem</a>
+            <i class='fas fa-bars toggle-sidebar'></i>
+            <form action="#">
+                <div class="form-group">
+                    <input type="text" placeholder="Search...">
+                    <i class='fas fa-search icon'></i>
+                </div>
+            </form>
+            <a href="#" class="nav-link">
+                <i class='fas fa-bell icon'></i>
+                <span class="badge">5</span>
+            </a>
+            <a href="#" class="nav-link">
+                <i class='fas fa-comments icon'></i>
+                <span class="badge">8</span>
+            </a>
+            <span class="divider"></span>
+            <div class="profile">
+                <img src="images/main-back.jpg" alt="">
+                <ul class="profile-link">
+                    <li><a href="profile.html"><i class='fas fa-user-circle icon'></i> 个人信息</a></li>
+                    <li><a href="fix.html"><i class='fas fa-user-edit icon'></i> 修改密码</a></li>
+                    <li><a href="#" onclick="logout()"><i class='fas fa-sign-out-alt icon'></i> 退出</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="sidebar">
+            <ul class="side-menu">
+                <li><a href="lunbo.html"><i class='fas fa-th-large icon'></i> 首页</a></li>
+                <li class="divider" data-text="主菜单">主菜单</li>
+                <li class="adminmenu">
+                    <a href="#"><i class='fas fa-book icon'></i> 管理员书籍管理 <i class='fas fa-chevron-right icon-right'></i></a>
+                    <ul class="side-dropdown">
+                        <li><a href="book.html">书籍列表</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" ><i class='fas fa-book icon'></i> 书籍管理 <i
+                            class='fas fa-chevron-right icon-right'></i></a>
+                    <ul class="side-dropdown">
+                        <li><a href="bookuser.html" class="active">书籍列表</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class='fas fa-user-circle icon'></i> 个人中心 <i
+                            class='fas fa-chevron-right icon-right'></i></a>
+                    <ul class="side-dropdown">
+                        <li><a href="profile.html">个人信息</a></li>
+                        <li><a href="safe.html">修改密码</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div id="content">
+            <main>
+                <div class="page-header">
+                    <div class="page-sub-header">
+                        <h3 class="page-title">书籍管理</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="book.html">书籍管理</a></li>
+                            <li class="breadcrumb-item active">书籍列表</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="page-content">
+
+                    <div class="page-group-form">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <input id="bookname" type="text" class="form-control" placeholder="输入书名查找 ...">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <input id="bookauthor" type="text" class="form-control" placeholder="输入作者姓名查找 ...">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <input id="bookisbn" type="text" class="form-control" placeholder="输入书籍ISBN查找 ...">
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <select class="form-control" id="booktype">
+                                        <option value="" selected>所有书籍类型查找</option>
+                                        <option value="1">青春</option>
+                                        <option value="2">小说</option>
+                                        <option value="3">文学</option>
+                                        <option value="4">艺术</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <select class="form-control" id="bookstatus">
+                                        <option value="" selected>所有书籍审核状态查找</option>
+                                        <option value="1">未提交</option>
+                                        <option value="2">待审核</option>
+                                        <option value="3">已通过</option>
+                                        <option value="4">被退回</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <div class="search-books-btn">
+                                    <button id="booksearch" type="btn" class="btn btn-primary">查询</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card card-table comman-shadow">
+                                <div class="card-body">
+
+                                    <div class="page-header">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <h3 class="page-title">书籍列表</h3>
+                                            </div>
+                                            <div class="float-end">
+                                                <a href="#" class="btn btn-outline-primary me-2" onclick="exportall()"><i
+                                                        class="fas fa-download"></i> 导出</a>
+                                                <button class="btn btn-primary openAddModal"><i
+                                                        class="fas fa-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+
+                                        <div class="row">
+                                            <div class="col-lg-22">
+                                                <label>显示
+                                                    <select class="form-control form-select" id="paginationLimit">
+                                                        <option value="10" selected="selected">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    条目</label>
+                                            </div>
+                                        </div>
+                                        <table class="table border-0 table-hover table-center mb-0 table-striped">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>
+
+                                                    </th>
+                                                    <th>书籍ISBN</th>
+                                                    <th>书籍名称</th>
+                                                    <th>书籍作者</th>
+                                                    <th>书籍照片</th>
+                                                    <th>书籍类型</th>
+                                                    <th>书籍状态</th>
+                                                    <th>书籍反馈意见</th>
+                                                    <th class="text-end">操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="booklist">
+
+                                            </tbody>
+                                        </table>
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div id="page-total">
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div>
+                                                    <ul class="pagination" id="page-num">
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+            <!-- MAIN -->
+        </div>
+
+       
+<div class="modal fade" id="deleteModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-header">
+                    <h3>删除书籍</h3>
+                    <p>确认删除书籍吗?</p>
+                </div>
+                <div class="modal-btn">
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="javascript:void(0);" class="btn btn-primary danger-btn" id="delete-btn">删除</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="javascript:void(0);" class="btn btn-primary cancel-btn cancel-btn">取消</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        <div class="modal fade" id="addModal">
+            <div class="modal-dialog  modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="addCenterModal">添加书籍信息</h4>
+                        <h4 class="modal-title" id="editCenterModal" style="display:none">编辑书籍信息</h4>
+                        <button type="button" class="btn-close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card comman-shadow">
+                            <div class="card-body">
+                                <form id="addBook">
+                                    <div class="row">
+                                        <input id="book-id" type="text" style="display:none">
+                                        <div class="col-12 col-sm-4 ">
+                                            <div class="form-group local-forms">
+                                                <label>申请人姓名<span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" required id="createrName">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="form-group local-forms">
+                                                <label>申请人电话<span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" required id="createrPhone">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="form-group local-forms">
+                                                <label>申请人地址<span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" required id="createrAddress">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="form-group local-forms">
+                                                <label>书籍名称<span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" required id="name">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="form-group local-forms calendar-icon">
+                                                <label>书籍作者 <span class="login-danger">*</span></label>
+                                                <input class="form-control datetimepicker" type="text" required
+                                                    id="author">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="form-group local-forms">
+                                                <label>书籍介绍<span class="login-danger">*</span></label>
+                                                <input class="form-control" type="text" required id="description">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-sm-4">
+                                            <div class="form-group local-forms">
+                                                <label>书籍类型 <span class="login-danger">*</span></label>
+                                                <select class="form-control select" id="type" required>
+                                                    <option disabled value="0" selected hidden>选择书籍类型</option>
+                                                    <option value="1">青春</option>
+                                                    <option value="2">小说</option>
+                                                    <option value="3">文学</option>
+                                                    <option value="4">艺术</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group local-forms">
+                                                <div id="img-upload" class="btn btn-primary">选择书籍封面</div>
+                                                <input id="img-file" type="file" style="display:none">
+                                                <input id="book-file" type="text" style="display:none">
+                                                <div class="gallery" id="gallery"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group local-forms">
+                                                <div id="txt-upload" class="btn btn-primary mb-2">选择书籍内容文件</div>
+                                                <input id="txt-file" type="file" style="display:none">
+                                                <input id="book-txt-file" type="text" style="display:none">
+                                                 <textarea id="txt-show" rows="5" cols="5" class="form-control"
+                                                    placeholder="书籍内容展示" readonly="readonly"></textarea> 
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="form-group local-forms">
+                                                <button type="submit" class="btn btn-primary">提交</button>
+                                                <div class="btn btn-success" id="bookstore">暂存草稿箱</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<div class="modal fade" id="sendModal">
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">提交审核书籍信息</h4>
+                <button type="button" class="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card comman-shadow">
+                    <div class="card-body">
+                        <form id="feedbookback">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <label>创建人反馈意见</label>
+                                        <input class="form-control" type="text" id="createrFeedback">
+                                        <input id="feedbookbackid" type="text" style="display: none">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <label>书籍管理员反馈审核意见</label>
+                                        <input class="form-control" type="text" id="feedback" readonly>
+                                    </div>
+                                </div>
+                  </div>
+                     <div class="col-12">
+                     <div class="form-group local-forms">
+                                        <button type="submit" class="btn btn-primary">提交</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="commentModal">
+    <div class="modal-dialog  modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">书籍评论</h4>
+                <button type="button" class="btn-close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card comman-shadow">
+                    <div class="card-body">
+                        <form id="commentBook">
+                            <div class="row">
+
+                                <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <input id="commentid" type="text" style="display: none">
+                                        <textarea id="comment-content" rows="5" cols="5" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                 <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <button type="submit" class="btn btn-primary">提交</button>
+                                    </div>
+                                </div> 
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+    <script src="js/message.js"></script>
+    <script src="js/ajax.js"></script>
+    <script src="js/common.js"></script> 
+    <script src="js/bookuser.js"></script>
+</body>
+
+</html>

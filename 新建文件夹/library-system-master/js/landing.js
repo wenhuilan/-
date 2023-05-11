@@ -15,8 +15,7 @@ loginForm.addEventListener("submit", function (e) {
     Ajax.post('http://127.0.0.1:3000/users/login', JSON.stringify(formData), function (data) {
         // 后台返回的数据就是 字符串类型。要转成json，必须自己手动转换。
         // JSON.parse() 方法解析一个JSON字符串，构造由字符串描述的JavaScript值或对象
-        let result = JSON.parse(data);
-                                                                                  // if (result.code == 200) {
+        let result = JSON.parse(data);                                                                
         if (result.code==200) {
             sessionStorage.setItem("token",result.data);
             message.show({ type: 'success', text: result.msg });
@@ -51,7 +50,7 @@ signupForm.addEventListener("submit",function(e){
         name:document.getElementById("signname").value,
         email:document.getElementById("signemail").value,
         pwd:document.getElementById("signpwd").value,
-        admin: 1
+        admin: 0
     };
 
     // 发送Ajax到登录接口

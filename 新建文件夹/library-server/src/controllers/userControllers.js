@@ -1,4 +1,5 @@
-// controllers是从数据库里拿到数据内容后，进行增加删除查询等操作
+// controllers执行sql语句，把前端传入的数据插入到数据库里
+// 从数据库里拿到数据内容后，进行增加删除查询等操作
 
 var dbConfig = require('../utils/dbConfig');
 var tokenUtil = require('../utils/token');
@@ -6,10 +7,10 @@ var tokenUtil = require('../utils/token');
 // async表示函数里有异步操作，await表示紧跟在后面的表达式需要等待结果。
 
 // 根据用户名称判断用户存不存在
-let isExist = async (name) => {
+ let isExist = async (name) => {
   let sql = `select * from user where name=?`;
   let sqlArr = [name];
-  let result = await dbConfig.SySqlConnect(sql, sqlArr);
+   let result = await dbConfig.SySqlConnect(sql, sqlArr);
   if (result.length) {
     return result[0];
   } else {
@@ -37,7 +38,7 @@ login = async (req) => {
     name,
     pwd
   } = req.body;
-  console.log(name, pwd)
+  // console.log(name, pwd)
   let result = await isExist(name);
   // 用户存在
   if (result) {
@@ -72,11 +73,11 @@ register = async (req) => {
     admin
   } = req.body;
 
-  let result = await isExist(name);
-  console.log(name,
+ let result = await isExist(name);
+   console.log(name,
       pwd,
       email,
-      admin)
+       admin)
   if (result) {
     return {
       'code': 400,
@@ -86,8 +87,7 @@ register = async (req) => {
     if (name && pwd && email) {
       let sql = `insert into user(pwd,name,email,admin) values(?,?,?,?)`;
       let sqlArr = [pwd, name, email, admin];
-      let result = await dbConfig.SySqlConnect(sql, sqlArr);
-      console.log(result.affectedRows)
+       let result = await dbConfig.SySqlConnect(sql, sqlArr);
       if (result.affectedRows == 1) {
         return {
           'code': 200,

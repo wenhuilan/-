@@ -98,13 +98,13 @@ class Slide {
     stopTimer() {
         clearInterval(this.timer);
     }
+
     init() {
         //初始化
         this.drawDOM(this.banners);
         this.bannerItemDOMs = this.getBannerItemDOMs();
         this.bannerItemDOMsLen = this.bannerItemDOMs.length;
         this.currentIndex = 0;
-
 
         //监听事件
         this.slideLeftBtnDOM.addEventListener('click', () => {

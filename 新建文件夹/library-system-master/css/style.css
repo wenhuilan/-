@@ -1314,5 +1314,10 @@ textarea.form-control {
 	}
 }
 
+.comment-box{
+	height: 600px;
+	width: 80%;
+	border: #333;
+}
 
 

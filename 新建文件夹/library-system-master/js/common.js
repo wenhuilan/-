@@ -129,3 +129,30 @@ function logout() {
 	},1000);
 	return;
 }
+
+
+//解码token里的存储数据
+function getUser() {
+	let token = sessionStorage.getItem('token');
+	var base64Url = token.split('.')[1];
+	var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+	var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function (c) {
+		return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+	}).join(''));
+	console.log(token);
+	console.log("base64Url" + base64Url);
+	console.log("base64" + base64);
+	console.log("jsonPayload" + jsonPayload);
+	return JSON.parse(jsonPayload);
+}
+
+
+var adminMenu = document.querySelectorAll('.adminmenu');
+adminMenu.forEach(item => {
+	let admin = getUser().admin;
+	if (admin == 1) {
+		item.style.display = 'block';
+	} else {
+		item.style.display = 'none';
+	}
+});

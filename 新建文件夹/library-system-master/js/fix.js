@@ -7,7 +7,8 @@ safe.addEventListener("submit", function (e) {
     pwd: document.getElementById("old").value,
     newpwd: document.getElementById("new2").value,
   };
-  console.log(formData);
+  // console.log(formData);
+  // toString()将对象转化为字符串
   if (new1.toString()!= new2.toString()) {
     message.show({type: 'error', text: '两次输入密码不一致!'});
     return;

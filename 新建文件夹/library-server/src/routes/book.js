@@ -13,9 +13,14 @@ const handlerBook = (req) => {
     return Book.deleteBookId(req);
   }else if (req.url == "/books/feedbackBook" &&  req.method.toLowerCase() == 'post') {
     return Book.feedbackBook(req);
+  } else if (req.url == "/books/commentBook" && req.method.toLowerCase() == 'post') {  
+     return Book.commentBook(req);
+  } else if (req.url.startsWith("/books/exportBookAll") && req.method.toLowerCase() == 'get') {
+    return Book.exportBookAll(req);
   }
 };
 
 module.exports = {
   handlerBook
 };
+

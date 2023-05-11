@@ -15,6 +15,7 @@ CREATE TABLE `books` (
 	`createrAddress` varchar(100) DEFAULT '' COMMENT '创建人地址',
 	`createrUserId` int(11) NOT NULL COMMENT '创建人用户id',
 	`createrFeedback` varchar(250) DEFAULT '' COMMENT '创建人反馈意见',
+  `commentBook` varchar(100) DEFAULT '' COMMENT '用户评论书籍',
   `created_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据修改时间',
   PRIMARY KEY (`id`),

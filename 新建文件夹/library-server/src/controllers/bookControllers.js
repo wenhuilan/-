@@ -1,7 +1,7 @@
 var dbConfig = require('../utils/dbConfig')
+const url = require("url");
 
-/**
- * 获取总条数*/
+// 获取总条数
 let getBookCount = async () => {
   let sql = `select count(*) as nums from books`;
   let result = await dbConfig.SySqlConnect(sql, []);
@@ -9,9 +9,7 @@ let getBookCount = async () => {
 }
 
 
-/**
- * 获取有条件的总条数
- */
+// 获取有条件的总条数
 let getBookWhereCount = async (table, where) => {
   let sql = `select count(*) as nums from ${table} where ${where}`;
   let result = await dbConfig.SySqlConnect(sql, []);
@@ -31,8 +29,6 @@ findBookAll = async (req) => {
     pagesize //获取条数
   } = req.body;
 
-  pagenum = pagenum ? pagenum : 1;
-  pagesize = pagesize ? Number(pagesize) : 10;
   let start = (pagenum - 1) * pagesize;
 
   let param = ` 1=1 `;
@@ -133,31 +129,55 @@ feedbackBook = async (req) => {
     feedback,
     status
   } = req.body;
-
-
-    //需要更新书籍操作
-    let sql = 'update books set createrFeedback=?,feedback=?,status=? where id=?';
-    let sqlAll = [
-      createrFeedback,
-      feedback,
-      status,
-      id
-    ];
-    let result = await dbConfig.SySqlConnect(sql, sqlAll);
-    if (result.affectedRows == 1) {
-      return ({
-        'code': 200,
-        'msg': '发送审核成功'
-      })
-    } else {
-      return ({
-        'code': 400,
-        'msg': '发送审核失败'
-      })
-    }
+  //需要更新书籍操作
+  let sql = 'update books set createrFeedback=?,feedback=?,status=? where id=?';
+  let sqlAll = [
+    createrFeedback,
+    feedback,
+    status,
+    id
+  ];
+  let result = await dbConfig.SySqlConnect(sql, sqlAll);
+  if (result.affectedRows == 1) {
+    return ({
+      'code': 200,
+      'msg': '发送审核成功'
+    })
+  } else {
+    return ({
+      'code': 400,
+      'msg': '发送审核失败'
+    })
+  }
 
 }
 
+commentBook = async (req) => {
+  let {
+    id,
+    comment
+  } = req.body;
+  console.log(id, comment);
+  //需要更新书籍操作
+  let sql = 'update books set commentBook=? where id=?';
+  let sqlAll = [
+    comment,
+    id
+  ];
+  let result = await dbConfig.SySqlConnect(sql, sqlAll);
+  if (result.affectedRows == 1) {
+    return ({
+      'code': 200,
+      'msg': '发送评论成功'
+    })
+  } else {
+    return ({
+      'code': 400,
+      'msg': '发送评论失败'
+    })
+  }
+
+}
 
 addBook = async (req) => {
   let {
@@ -238,8 +258,53 @@ addBook = async (req) => {
   }
 }
 
+//导出书籍查询
+exportBookAll = async (req) => {
+  let {
+    createrUserId,//创建人id
+    bookname, //名称
+    bookauthor,//书名作者
+    bookisbn,//图书isbn
+    booktype,//图书类型
+    bookstatus,//图书审核状态
+    ids //书籍id选中集合
+  } = url.parse(req.url, true).query;
+
+
+  let param = ` 1=1 `;
+  // 判断是否有勾选，有则选择所有勾选的书籍导出，否则按照将展示的书籍导出
+  if (ids) {
+    param += ` and id in (` + ids + `)`;
+  } else {
+    if (bookname) {
+      param += ` and name like '%${bookname}%' `;
+    }
+    if (bookauthor != null && bookauthor != undefined && bookauthor != "") {
+      param += ` and author like '%${bookauthor}%' `;
+    }
+    if (bookisbn != null && bookisbn != undefined && bookisbn != "") {
+      param += ` and isbn = '${bookisbn}' `;
+    }
+    if (booktype != null && booktype != undefined && booktype != "") {
+      param += ` and type = '${booktype}' `;
+    }
+    if (bookstatus != null && bookstatus != undefined && bookstatus != "") {
+      param += ` and status = '${bookstatus}' `;
+    }
+    if (createrUserId != null && createrUserId != undefined && createrUserId != "") {
+      param += ` and createrUserId = '${createrUserId}' `;
+    }
+  }
+
+  let sql = `select * from books where ` + param + `order by created_time desc `;
+  console.log('查询sql导出', sql)
+  let result = await dbConfig.SySqlConnect(sql, []);
+  return result;
+}
+
+// 随机生成
 let urlAlphabet =
-    'useandom26T198340PX75pxJACKVERYMINDBUSHWOLFGQZbfghjklqvwyzrict'
+  'useandom26T198340PX75pxJACKVERYMINDBUSHWOLFGQZbfghjklqvwyzrict'
 
 let nanoid = (size = 21) => {
   let id = ''
@@ -256,5 +321,7 @@ module.exports = {
   deleteBookId,
   addBook,
   findBookId,
-  feedbackBook
+  feedbackBook,
+  commentBook,
+  exportBookAll
 }

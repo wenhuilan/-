@@ -12,7 +12,7 @@
 <body>
 <div class="main-wrapper">
   <div class="header">
-    <a href="#" class="brand"><i class='far fa-laugh-wink icon'></i> LibrarySystem</a>
+    <a href="#" class="brand"><i class='far fa-laugh-wink icon'></i>LibrarySystem</a>
     <i class='fas fa-bars toggle-sidebar'></i>
     <form action="#">
       <div class="form-group">
@@ -44,11 +44,10 @@
     <ul class="side-menu">
       <li><a href="lunbo.html"><i class='fas fa-th-large icon'></i> 首页</a></li>
       <li class="divider" data-text="主菜单">主菜单</li>
-      <li>
-        <a href="#"><i class='fas fa-user-edit icon'></i> 用户信息管理 <i
-                class='fas fa-chevron-right icon-right'></i></a>
+      <li class="adminmenu">
+        <a href="#"><i class='fas fa-book icon'></i> 管理员书籍管理 <i class='fas fa-chevron-right icon-right'></i></a>
         <ul class="side-dropdown">
-          <li><a href="manage.html">用户信息列表</a></li>
+          <li><a href="bookuser.html">书籍列表</a></li>
         </ul>
       </li>
       <li>
@@ -118,7 +117,7 @@
                           <div class="form-group local-forms">
                             <div id="img-upload" class="btn btn-primary">更换头像</div>
                             <input id="img-file" type="file"  style="display:none">
-                            <input id="book-file" type="text"  style="display:none" >
+                             <input id="book-file" type="text"  style="display:none">  
                             <div class="gallery" id="gallery"></div>
                           </div>
                         </div>
@@ -132,10 +131,6 @@
                   </div>
                 </div>
               </div>
-
-
-
-
       </div>
 
     </main>

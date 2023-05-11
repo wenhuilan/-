@@ -1,0 +1,554 @@
+一、最简单的服务
+  const http = require('http')
+  const server = http.createServer((req, res) => {
+    res.end('hello word')
+})
+server.listen(5000)
+
+二、开发路由器
+1. 服务模块、路由模块分离
+
+ （1）加入路由判断
+  const server = http.createServer((req, res) => {
+if(req.method === 'GET' && req.path === '/api/blog/list')
+{
+        return {
+        	data: '获取到博客列表',
+        	code: 200
+            }
+     }
+})
+
+3）、模块化提取./bin/www.js
+  const http = require('http')
+  const PORT = 5000
+  const serverHandle = require('../app')
+
+  const server = http.createServer(serverHandle)
+  server.listen(PORT)
+
+
+4）、response格式设置，404处理。./app.js
+
+    const queryString = require('querystring')
+    const handleUserRouter = require('./src/router/user')
+
+    const severHandle = (req, res) => {
+    // 设置返回格式JSON
+    res.setHeader('Content-type','application/json')
+    
+    const userData = handleUserRouter(req, res)
+    if(userData){
+        userData.then(u => {
+            res.end(JSON.stringify(u))
+        })
+        return
+    }
+	
+	/** 还可以插入其他路由，从上到下，命中一个就停止 **/
+
+     // 未命中路由
+    res.writeHead(404, {"Content-type": "text/plain"})
+    res.write("404 Not Found ~\n")
+    res.end()
+}
+
+module.exports = severHandle;导出函数
+
+5）、./src/router/user.js
+
+const handleUserRouter = (req, res) => {
+    if(req.method === 'POST' && req.path === '/api/user/login'){
+        return '登录成功'
+    }
+}
+
+module.exports = handleUserRouter
+
+2. 处理request中query和post数据
+
+通过req.body访问post的数据，通过req.query访问到query的数据
+
+  1）./app.js
+
+  const queryString = require('querystring')
+const handleUserRouter = require('./src/router/user')
+
+const getPostData = (req) => {
+    return new Promise((resolve, reject) => {
+        if(req.method !== 'POST'){
+            resolve({})
+            return
+        }
+        if(req.headers['content-type'] !== 'application/json'){
+            resolve({})
+            return
+        }
+        let postData = ''
+        req.on('data', chunk => postData += chunk.toString())
+        req.on('end', () => {
+            if(!postData){
+                resolve({})
+                return
+            }
+            resolve(
+                JSON.parse(postData)
+            )
+        })
+    })
+}
+
+const severHandle = (req, res) => {
+    // 设置返回格式JSON
+    res.setHeader('Content-type','application/json')
+ 
+    const url = req.url
+    req.path = url.split('?')[0]
+
+    // 解析query
+    req.query = queryString.parse(url.split('?')[1])
+
+    getPostData(req).then(postData => {
+        req.body = postData
+
+        const userData = handleUserRouter(req, res)
+        if(userData){
+            userData.then(u => {
+                res.end(JSON.stringify(u))
+            })
+            return
+        }
+
+         // 未命中路由
+        res.writeHead(404, {"Content-type": "text/plain"})
+        res.write("404 Not Found ~\n")
+        res.end()
+    })
+}
+
+module.exports = severHandle
+
+
+三、数据库mysql
+1. mysql配置文件--./src/config/db.js
+
+npm安装mysql依赖，并添加一个mysql的配置文件，输出链接mysql需要的用户名、密码、数据库端口、名称等必要信息。
+
+const env = process.env.NODE_ENV
+let MYSQL_CONFIG = {}
+
+if(env === 'dev'){
+    // mysql
+    MYSQL_CONFIG = {
+        host: 'localhost',
+        user: 'root',
+        password: '123456',
+        port: '3306',
+        database: 'myblog'
+    }
+}
+
+module.exports = {
+    MYSQL_CONFIG,
+}
+
+
+2、 sql执行函数--单独抽出一个执行sql语句的函数--./src/db/mysql.js
+
+const mysql = require('mysql')
+const { MYSQL_CONFIG } = require('../config/db')    // 来自上面的配置文件
+
+// 创建一个mysql实例，因为这是一个单例，所以不会用到退出数据库
+const con = mysql.createConnection(MYSQL_CONFIG)
+// 连接数据库
+con.connect()
+
+// con.query是一个异步，且是回调的形式，所以我们将其封装成promise的形式，更方便使用
+const exec = (sql) => {
+    return new Promise((resolve, reject) => {
+        con.query(sql, (err, result) => {
+            if(err){
+                reject(err)
+                return
+            }
+            resolve(result)
+        })
+    })
+}
+
+module.exports = {
+    exec,
+    escape: mysql.escape
+}
+
+--escape--
+补充：在Node.js中，MySQL模块提供了一个escape方法，用于将JavaScript变量转义为MySQL数据库中可接受的字符串形式。
+该方法的语法如下:mysq1.escape(value)
+
+其中value表示需要转义的JavaScript变量。escape方法会根据变量类型自动选择合适的转义方式，
+
+const mysql = require('mysql');
+
+// 创建连接池
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',
+  password: '123456',
+  database: 'test'
+});
+
+// 需要转义的变量
+const username = "admin' #";
+
+// 转义字符串
+const escapedUsername = mysql.escape(username);
+
+// 查询数据
+pool.query(`SELECT * FROM users WHERE username=${escapedUsername}`, (error, results, fields) => {
+  if (error) throw error;
+  console.log(results);
+});
+
+// 释放连接
+pool.end();
+--结束--
+
+3、 controller调用sql执行语句--./src/controller/user.js
+
+const { exec, escape } = require('../db/mysql')
+
+const login = (username, password) => {
+	// 拼接sql语句
+    const sql = `select username, realName from users where username=${username} and password=${password}`
+    // 调用我们封装的sql语句执行函数，依旧返回一个promise。
+    return exec(sql).then(rows => {
+    	// sql查出来是“行”数组形式
+        return (rows[0] || {})
+    })
+}
+
+module.exports = {
+    login
+}
+
+4、在router里面去调用login函数判断用户名、密码是否正确。--./src/router/user.js
+
+if(req.method === 'POST' && req.path === '/api/user/login'){
+   	const {username, password} = req.body
+    const result = login(username, password)
+    
+    return result.then(loginData => {
+        if(loginData){
+            return "登录成功"
+        }else{
+            return "登录失败"
+        } 
+    }).catch(err => {
+        return "登录失败"
+    })
+}
+
+文件上传下载
+input type="file" id="file" style="width:50%;height:50px;" placeholder="请选择上传文件" @change="uploadFile" />
+
+<button style="width:40%;height:50px;" @click="loadFile" > 下载文件</button>
+
+</templete>
+
+<script>
+
+methods:{
+
+uploadFile(){  //上传文件
+
+            var file = document.querySelector("#file").files[0]; //获取上传文件
+
+            var formdata = new FormData();
+
+            formdata.append("file",file);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("post","http://xxx/fileInfo/");
+
+            xhr.onreadystatechange = function () {
+
+                if (xhr.readyState === 4 && xhr.status==200){
+
+                         console.log('上传结束')
+
+                }
+
+            }
+
+            xhr.upload.onprogress = function (event) {
+
+                if(event.lengthComputable){
+
+                    console.log('------>'+event.loaded/event.total *100+'%')  //显示上传进度
+
+                }
+
+            }
+
+            xhr.send(formdata);
+
+        },
+
+loadFile(){ //下载文件
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open("post","http://xxx/fileInfo/fileInfo/load");
+
+            xhr.send({});
+
+            xhr.onreadystatechange = function () { //获取下载结果
+
+                console.log('onreadystatechange --------')
+
+                if (xhr.readyState === 4 && xhr.status==200){
+
+                    let response = xhr.response
+
+                    response = JSON.parse(response)
+
+                    console.log(response.file)
+
+                    let file = response.file //文件数据
+
+                    let filename = response.name //文件名称
+
+                    let filetype = response.type //文件类型
+
+                    console.log(`文件名：${filename} --- 文件类型：${filetype}  --- 下载中...`)
+
+                    let loadBuffer = Buffer.from(file)
+
+                    let blob = new Blob([loadBuffer], {type: filetype}) //表示一个不可变、原始数据的类文件对象,想仔细了解可以自行搜索
+
+                    //生成临时元素自动下载
+
+                    let a = document.createElement('a')
+
+                    a.download = filename
+
+                    a.href = URL.createObjectURL(blob)
+
+                    document.body.appendChild(a)
+
+                    a.click()
+
+                    document.body.removeChild(a)
+
+                }
+
+            }
+
+        },
+
+}
+
+</script>
+
+文件上传下载  API
+
+koa 使用插件koa-body进行转换，影响文件流获取
+
+文件流根据各自的方式获取
+
+import koaBody from 'koa-body'
+
+app.use(koaBody({multipart:true}))
+
+//上传接口
+
+router.post('/', async (ctx) => {
+
+  try{
+
+  let files = ctx.request.body.files  //获取文件流
+
+  let file = files.file //获取上传文件
+
+  let filetype = file.type //获取上传文件类型
+
+  let filename= file.name //获取上传文件名称
+
+  let fileReader = fs.createReadStream(file.path) //fs读取文件流
+
+  //读取数据内置的事件监听
+
+  let str = ''
+
+  fileReader.on('data',(chunk) => { //fs获取读取的文件流
+
+     //chunk 是 Buffer 
+
+    str += chunk.toString('binary') //将文件流转换为二进制数据
+
+  })
+
+  fileReader.on('end',() => { //文件流读取完成
+
+    //将读取完成的文件数据保存数据库或者其他
+
+   let body = {
+
+   file: str,
+
+type: filetype,
+
+name: filename
+
+}
+
+  })
+
+  ctx.body = {msg:'上传成功'}
+
+}catch(err){
+
+  console.log(err)
+
+  ctx.body = err
+
+}
+
+})
+
+//下载接口
+
+router.post('/fileInfo/load', async (ctx) => {
+
+//查询文件数据
+
+let body = {
+
+   file: file,
+
+type: filetype,
+
+name: filename
+
+}
+
+  let buffer = Buffer.from(body.file ,'binary')  //将文件数据转换为二进制
+
+  ctx.body =  {
+
+    file: buffer ,
+
+    name: body.name,
+
+    type: body.type
+
+  }
+
+})
+
+encodeURI() 和 encodeURIComponent() 方法可以对URI(通用资源标示符)进行编码，以便发送给浏览器，有效的URI中不能包含某些字符，例如空格。
+而这两个URI编码方法就可以对URI进行编码，它们用特殊的UTF-8编码替换所有无效的字符，从而让浏览器能够接受和理解。
+
+ 
+const fs=require('fs');
+const path=require('path');
+let writeStream=fs.createWriteStream('./test/b.js',{encoding:'utf8'});
+ 
+ 
+ 
+ 
+ 
+//读取文件发生错误事件
+writeStream.on('error', (err) => {
+    console.log('发生异常:', err);
+});
+//已打开要写入的文件事件
+writeStream.on('open', (fd) => {
+    console.log('文件已打开:', fd);
+});
+//文件已经就写入完成事件
+writeStream.on('finish', () => {
+    console.log('写入已完成..');
+    console.log('读取文件内容:', fs.readFileSync('./test/b.js', 'utf8')); //打印写入的内容
+    console.log(writeStream);
+});
+ 
+//文件关闭事件
+writeStream.on('close', () => {
+    console.log('文件已关闭！');
+});
+ 
+writeStream.write('这是我要做的测试内容');
+writeStream.end();
+ 
+
+ 基于Token的身份验证的过程如下:
+
+1. 登陆时，客户端发送用户名密码
+2. 服务端验证用户名密码是否正确，校验通过就会生成一个有时效的token串，发送给客户端
+3. 客户端储存token,一般都会存储在localStorage或者cookie里面
+4. 客户端每次请求时都带有token，可以将其放在请求头里，每次请求都携带token
+5. 服务端验证token，所有需要校验身份的接口都会被校验token，若token解析后的数据包含用户身份信息，则身份验证通过，返
+
+
+NodeJS 中如何应用 JWT
+1、首先安装 jsonwebtoken
+npm install jsonwebtoken --save
+2、引入 jsonwebtoken
+const jwt = require('jsonwebtoken')
+
+3、封装 jwt.js
+// token生成的密匙，根据自己需求定义
+const jwtKey = 'dengxiansheng' 
+
+// token生成函数(jwtSign)，有效时间为一个小时
+const jwtSign = (data) => { 
+  const token = jwt.sign(data, jwtKey, {expiresIn: 60 * 60})
+  return token
+}
+
+// token验证函数(jwtCheck)
+const jwtCheck = (req, res, next) => { 
+  //前端headers传来的token值:
+  const token = req.headers.token
+  jwt.verify(token, jwtKey, (err, data) => {
+    if (err) {
+      res.send({
+        status: '401',
+        msg: 'token无效'
+      })
+    } else {
+      req.jwtInfo = data
+      next()
+    }
+  })
+}
+
+module.exports = {
+  jwtSign,
+  jwtCheck
+}
+4、登录接口获取token
+//引入token生成函数
+const {jwtSign} = require('../util/jwt')
+// 用引入的jwtSign方法生成token并返回
+const token = jwtSign({_mg_name: body.mg_name}) 
+//token值传给前端
+res.json({
+	status: 200,
+	message: '请求成功',
+	token,
+})
+
+5、其他接口验证token
+//引入token验证函数
+const {jwtCheck} = require('../util/jwt')
+
+// 用引入的jwtCheck方法验证token
+router.get('/manager',jwtCheck, (req, res) => {
+	res.send({
+	    status: 200,
+	     message: '验证token成功',
+	 });
+})
